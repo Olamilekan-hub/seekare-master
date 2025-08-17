@@ -4,7 +4,7 @@ const passport = require('passport');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config({
-  path: `${process.env.NODE_ENV === 'development' ? '.dev.env' : '.env'}`
+  path: `${process.env.NODE_ENV === 'development' ? '.env' : '.env'}`
 });
 const { dbUrl } = require('./misc/dbconfig');
 const userRoutes = require('./routes/client/users');

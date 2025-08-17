@@ -12,7 +12,6 @@ import { Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles, Hidden, Box } from "@material-ui/core";
 import { BsArrowBarRight, BsArrowBarLeft } from "react-icons/bs";
-import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import {
   openWikiLeftSidebar,
@@ -32,10 +31,6 @@ import useAuth from "app/hooks/useAuth";
 import { tourSteps, responsiveSteps } from "app/util/tourSteps";
 import { setIsRunTour } from "app/store/ui/actions";
 import { useLocalStorage } from "app/hooks/useLocalstorage";
-
-import Home from "../layouts/ClientLayout/Pages/Home/Index";
-import Question from "../layouts/ClientLayout/Pages/Question/index";
-import Answer from "../layouts/ClientLayout/Pages/Answer";
 
 import { WikiContextProvider } from "./wikiContext";
 
@@ -65,18 +60,16 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "10px",
     zIndex: 0,
     [theme.breakpoints.down("sm")]: {
-      display: "none",
-      width: "100% !important", 
+      width: "100% !important",
+      display: "block !important",
     },
   },
   mainContent: {
     padding: "10px",
     width: "45%",
     [theme.breakpoints.down("sm")]: {
-    display: "block !important",
-    width: "100% !important",
-    // position: "relative",
-    // zIndex: 1,
+      display: "none",
+      width: "100% !important",
     },
   },
 
@@ -149,9 +142,6 @@ export default function WikiHome() {
   );
   const isTourRun = useSelector((state) => state.ui.content.isTourRun);
   const step = useSelector((state) => state.ui.content.step);
-
-  const theme = useTheme();
-  const isMdDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [tempTourSteps, setTempTourSteps] = useState([]);
   const [dimensions, setDimensions] = React.useState(window.innerWidth);
@@ -342,7 +332,7 @@ export default function WikiHome() {
               left: left
             }}
           ></div> 
-          {isMdDown ? <MobileWikiHomeRoute ref={ref} /> : <WikiHomeRoute ref={ref} />}
+          <WikiHomeRoute ref={ref} />
           {!rightSidebarData?.isOpen && (
             <BsArrowBarLeft
               className={classes.rightMenuIcon}
@@ -355,7 +345,7 @@ export default function WikiHome() {
             className={classes.rightPanel}
             style={{
               width: rightSidebarData?.isOpen ? "35%" : "100%",
-              display: (responsive === "karePost" ? "block" : ""),
+              display: window.innerWidth <= 768 ? "block" : (responsive === "karePost" ? "block" : ""),
             }}
           >
             <WikiRightSidebar ref={ref} />
@@ -371,21 +361,11 @@ const WikiHomeRoute = forwardRef((prop, ref) => {
     <Switch>
       <Route path="/wiki/search" component={WikiSearchList} />
       <Route path="/wiki/question/ask" component={AddPost} />
-      <Route path="/wiki/question/:questionID/:questionTitle/show" component={WikiQuestionContent} />
+      <Route
+        path="/wiki/question/:questionID/:questionTitle/show"
+        component={WikiQuestionContent}
+      />
       <Route component={() => <WikiContent ref={ref} />} />
-    </Switch>
-  );
-});
-
-const MobileWikiHomeRoute = forwardRef((prop, ref) => {
-  return (
-    <Switch>
-      <Route path="/wiki/search" component={WikiSearchList} />
-      <Route path="/wiki/question/ask" component={Question} />
-      <Route path="/wiki/answer" component={Answer} />
-      <Route path="/wiki/question/:questionID/:questionTitle/show" component={WikiQuestionContent} />
-      <Route path="/" component={Home} />
-      <Route component={Home} />
     </Switch>
   );
 });

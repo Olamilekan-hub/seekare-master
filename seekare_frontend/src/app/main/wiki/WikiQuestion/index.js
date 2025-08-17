@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useRouteMatch, useHistory } from "react-router-dom";
+import { useRouteMatch, useHistory, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -718,7 +718,7 @@ export const WikiQuestionContent = () => {
       })
     );
   };
-
+  
 
   if (!question) {
     return <Loader />;
@@ -735,11 +735,12 @@ export const WikiQuestionContent = () => {
         <Box className={classes.box}>
           <Box className={classes.boxBody}>
             {responsive === "karePostItem" && (
-              <FaLongArrowAltLeft
-                size="22px"
-                className={classes.closeButton}
-                onClick={() => dispatch(changeResponsive("karePost"))}
-              />
+              <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <FaLongArrowAltLeft
+                  size="22px"
+                  className={classes.closeButton}
+                />
+              </Link>
             )}
             <Box className={classes.questionHeader}>
               <Box display="flex" alignItems="center">

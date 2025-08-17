@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles, Box, Typography } from "@material-ui/core";
 import { setSearchTerm } from "app/store/question/actions";
@@ -15,6 +15,11 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { useWikiContext } from "../wikiContext";
 
+// Images for rotating header
+import ModeratedByPhysicians from "../../../../assets/images/moderated-by-physicians.png";
+import ShareYourExperiences from "../../../../assets/images/share-your-experiences.png";
+import FightAgainstMisinformation from "../../../../assets/images/fight-against-misinformation.png";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     overflow: "hidden",
@@ -22,9 +27,6 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     flexDirection: "column",
     padding: 10,
-    // [theme.breakpoints.down("sm")]: {
-    //   paddingTop: "40px",
-    // },
   },
   menuIcon: {
     fontSize: 25,
@@ -42,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
         : "1px solid transparent",
     padding: 10,
     borderRadius: "1rem",
-    height: "calc(100% - 120px)",
+    height: "calc(100% - 240px)", // Adjusted for rotating header
   },
   wikiListTitle: {
     width: "234px",
@@ -106,7 +108,96 @@ const useStyles = makeStyles((theme) => ({
       height: "20px",
     },
   },
+  // New styles for rotating header
+  rotatingHeader: {
+    width: "95%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: "15px",
+    padding: theme.spacing(2, 2),
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+    border: `1px solid #EDF1FF`,
+    marginBottom: theme.spacing(2),
+    minHeight: "60px",
+    position: "relative",
+    overflow: "hidden",
+    margin: "0 auto 16px auto",
+    [theme.breakpoints.down('sm')]: {
+      width: "100%",
+      padding: theme.spacing(1.5, 1),
+      gap: theme.spacing(1),
+      minHeight: "50px",
+    },
+  },
+  headerContent: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    transition: "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+    opacity: 1,
+    transform: "translateY(0)",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  },
+  headerImage: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    marginRight: theme.spacing(1.5),
+    [theme.breakpoints.down('sm')]: {
+      width: "30px",
+      height: "30px",
+      marginRight: theme.spacing(1),
+    },
+  },
+  headerText: {
+    fontFamily: "Poppins",
+    fontWeight: 600,
+    fontSize: "18px",
+    lineHeight: "22px",
+    color: "#000000",
+    textAlign: "center",
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "14px",
+      lineHeight: "18px",
+    },
+  },
+  divider: {
+    width: "4px",
+    height: "30px",
+    backgroundColor: "#4C6FFF",
+    borderRadius: "10px",
+    marginLeft: theme.spacing(1.5),
+    [theme.breakpoints.down('sm')]: {
+      width: "3px",
+      height: "25px",
+    },
+  },
 }));
+
+// Header messages data
+const headerMessages = [
+  {
+    image: ModeratedByPhysicians,
+    text: "Moderated by physicians",
+    alt: "Moderated By Physicians"
+  },
+  {
+    image: ShareYourExperiences,
+    text: "Share your experiences",
+    alt: "Share Your Experiences"
+  },
+  {
+    image: FightAgainstMisinformation,
+    text: "Fight against misinformation",
+    alt: "Fight Against Misinformation"
+  }
+];
 
 const WikiRightSidebar = forwardRef((props, ref) => {
   const dispatch = useDispatch();
@@ -120,27 +211,69 @@ const WikiRightSidebar = forwardRef((props, ref) => {
   const { id: activeWikiId } = useSelector((state) => state.wiki.activeWiki);
   const responsive = useSelector((state) => state.ui.responsive.responsiveType);
 
-  const { searchTerm } = useSelector((state) => state.question);
+  const { searchTerm = '' } = useSelector((state) => state.question || {});
   const classes = useStyles({
     activeContent,
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [referencedPosts, setReferencedPosts] = useState(false);
-  // const [questions, setQuestions] = useState([]);
-  // const [pageNum, setPageNum] = useState(0);
   const { pageNum, setPageNum, questions, setQuestions } = useWikiContext();
+
+  // State for rotating header
+  const [currentHeaderIndex, setCurrentHeaderIndex] = useState(0);
+  const [isHeaderTransitioning, setIsHeaderTransitioning] = useState(false);
+
+  // Function for header transitions
+  const handleHeaderTransition = () => {
+    setIsHeaderTransitioning(true);
+    
+    setTimeout(() => {
+      setCurrentHeaderIndex((prevIndex) => 
+        (prevIndex + 1) % headerMessages.length
+      );
+      setIsHeaderTransitioning(false);
+    }, 300);
+  };
+
+  useEffect(() => {
+    // Reset context when navigating to home
+    if (window.location.pathname === '/') {
+      setQuestions([]);
+      setPageNum(0);
+    }
+  }, [setQuestions, setPageNum]);
+
+  useEffect(() => {
+    console.log('WikiRightSidebar state:', {
+      searchTerm: searchTerm?.length,
+      questionsLength: questions?.length,
+      pathname: location.pathname,
+      responsive
+    });
+  }, [searchTerm, questions, location.pathname, responsive]);
+
+  // Effect for header rotation - every 5 seconds
+  useEffect(() => {
+    const headerInterval = setInterval(() => {
+      handleHeaderTransition();
+    }, 5000);
+
+    return () => clearInterval(headerInterval);
+  }, []);
 
   const handleSetReferenced = () => {
     setReferencedPosts((prev) => !prev);
     setQuestions([]);
     setPageNum(0);
   };
+
   const onKeyUpHandler = (e) => {
     if (e.keyCode === 13 && searchQuery !== searchTerm) {
       dispatch(setSearchTerm(searchQuery));
       setPageNum(0);
     }
   };
+
   const onChangeHandler = (value) => {
     setSearchQuery(value);
   };
@@ -157,12 +290,15 @@ const WikiRightSidebar = forwardRef((props, ref) => {
       );
     }
   };
+
   const handleClickKareBook = () => {
     dispatch(changeResponsive("kareBook"));
   };
+
   const handleClickKarePost = () => {
     dispatch(changeResponsive("karePost"));
   };
+
   return (
     <Box
       className={`${classes.root} karePost`}
@@ -170,6 +306,29 @@ const WikiRightSidebar = forwardRef((props, ref) => {
         display: responsive === "karePost" ? "block" : "",
       }}
     >
+      {/* Rotating Header */}
+      <Box className={classes.rotatingHeader}>
+        <Box 
+          className={classes.headerContent}
+          style={{
+            opacity: isHeaderTransitioning ? 0 : 1,
+            transform: isHeaderTransitioning 
+              ? "translate(-50%, -60%)" 
+              : "translate(-50%, -50%)",
+          }}
+        >
+          <img
+            src={headerMessages[currentHeaderIndex].image}
+            alt={headerMessages[currentHeaderIndex].alt}
+            className={classes.headerImage}
+          />
+          <Typography className={classes.headerText}>
+            {headerMessages[currentHeaderIndex].text}
+          </Typography>
+          {/* <div className={classes.divider}></div> */}
+        </Box>
+      </Box>
+
       <Box
         display="flex"
         justifyContent="space-between"
@@ -246,7 +405,7 @@ const WikiRightSidebar = forwardRef((props, ref) => {
           </Box>
         )}
         {pathname.includes("/show") ||
-        searchTerm.length > 1 ||
+        (searchTerm?.length || 0) > 1 ||
         activeWikiId === undefined ? (
           <></>
         ) : isMd || isAdmin ? (
@@ -276,9 +435,6 @@ const WikiRightSidebar = forwardRef((props, ref) => {
           >
             Add Post
           </CustomButton>
-          {/* <Box onClick={handleClickMenu} mx={1}>
-            <CloseIcon className={classes.menuIcon} />
-          </Box> */}
         </Box>
       </Box>
 
@@ -301,6 +457,7 @@ const WikiRightSidebar = forwardRef((props, ref) => {
         />
       </Box>
       <Box className={classes.mainContent}>
+        
         <Questions
           ref={ref}
           referencedPosts={referencedPosts}

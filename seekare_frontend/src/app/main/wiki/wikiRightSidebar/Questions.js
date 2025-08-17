@@ -9,6 +9,7 @@ import {
   makeStyles,
   MenuItem,
   Select,
+  Typography,
 } from "@material-ui/core";
 
 import { getReferencedAnswers } from "app/store/answer/actions";
@@ -20,6 +21,15 @@ import { setActiveContent } from "app/store/ui/actions";
 import Spinner from "../spinner";
 import { forwardRef } from "react";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+
+// React Icons for ads
+import { FiThumbsUp } from "react-icons/fi";
+import { FiThumbsDown } from "react-icons/fi";
+
+// Advertisement images
+import Advertisement from "../../../../assets/images/advertisement.png";
+import Advertisement01 from "../../../../assets/images/advertisement-01.png";
+import Advertisement02 from "../../../../assets/images/advertisement-02.avif";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -92,7 +102,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.main,
     borderBottom: `2px solid ${theme.palette.text.main}`,
   },
-
   postsGroup: {
     marginTop: "15px",
   },
@@ -108,7 +117,236 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  // Advertisement styles 
+  advertisementContainer: {
+    width: "100%",
+    backgroundColor: "#EDF1FF",
+    borderRadius: "10px",
+    padding: "15px",
+    marginTop: "15px",
+    marginBottom: "10px",
+    border: `1px solid #EDF1FF`,
+    position: "relative",
+    transition: "opacity 0.4s ease-in-out, transform 0.4s ease-in-out",
+    opacity: 1,
+    transform: "translateY(0)",
+    [theme.breakpoints.down('md')]: {
+      padding: "12px",
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: "10px",
+      marginTop: "12px",
+    },
+  },
+  sponsoredLabel: {
+    position: "absolute",
+    top: "8px",
+    right: "8px",
+    backgroundColor: "#FF6B35",
+    color: "#FFFFFF",
+    fontSize: "9px",
+    fontWeight: "600",
+    padding: "2px 6px",
+    borderRadius: "10px",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+    zIndex: 1,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "8px",
+      padding: "2px 5px",
+      top: "6px",
+      right: "6px",
+    },
+  },
+  adImage: {
+    width: "100%",
+    height: "360px",
+    objectFit: "cover",
+    marginTop: "8px",
+    borderRadius: "8px",
+    [theme.breakpoints.down('sm')]: {
+      height: "100px",
+      borderRadius: "6px",
+    },
+  },
+  adUserName: {
+    fontSize: "14px",
+    fontWeight: "600",
+    marginLeft: "8px",
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "13px",
+      marginLeft: "6px",
+    },
+  },
+  adUserAvatar: {
+    width: "28px",
+    height: "28px",
+    borderRadius: "50%",
+    [theme.breakpoints.down('sm')]: {
+      width: "24px",
+      height: "24px",
+    },
+  },
+  adMetaText: {
+    fontFamily: "Poppins",
+    fontSize: "11px",
+    fontWeight: "400",
+    color: "#6B6E7A",
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "10px",
+    },
+  },
+  adContentText: {
+    fontFamily: "Poppins",
+    fontSize: "13px",
+    fontWeight: "400",
+    marginTop: "8px",
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "12px",
+    },
+  },
 }));
+
+// Ads Component
+const Ads = ({ adIndex = 0, isTransitioning = false, classes }) => {
+  const adData = [
+    {
+      companyName: "HealthCare Plus",
+      companyImage: Advertisement,
+      timeAgo: "Sponsored",
+      responses: "Ad",
+      content: "Join our medical community and connect with certified healthcare professionals worldwide.",
+      image: Advertisement,
+      hasText: true,
+    },
+    {
+      companyName: "MedTech Solutions",
+      companyImage: Advertisement01,
+      timeAgo: "Sponsored",
+      responses: "Ad",
+      content: "Discover cutting-edge medical technology and innovative healthcare solutions.",
+      image: Advertisement01,
+      hasText: true,
+    },
+    {
+      companyName: "Wellness Pro",
+      companyImage: Advertisement02,
+      timeAgo: "Sponsored",
+      responses: "Ad",
+      content: "Transform your health journey with our comprehensive wellness programs.",
+      image: Advertisement02,
+      hasText: true,
+    },
+  ];
+
+  const selectedAd = adData[adIndex % adData.length];
+  
+  return (
+    <Box 
+      className={classes.advertisementContainer}
+      style={{
+        opacity: isTransitioning ? 0.3 : 1,
+        transform: isTransitioning ? "translateY(-10px)" : "translateY(0)",
+      }}
+    >
+      <Box className={classes.sponsoredLabel}>
+        {selectedAd.timeAgo}
+      </Box>
+      
+      <Box
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <Box style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={selectedAd.companyImage}
+            alt="Company Avatar"
+            className={classes.adUserAvatar}
+          />
+          <Box>
+            <Typography className={classes.adUserName}>
+              {selectedAd.companyName}
+            </Typography>
+          </Box>
+        </Box>
+        <Box style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
+          <Typography className={classes.adMetaText}>
+            {selectedAd.timeAgo}
+          </Typography>
+          <Typography className={classes.adMetaText} style={{ margin: "0px 8px" }}>
+            |
+          </Typography>
+          <Typography className={classes.adMetaText}>
+            {selectedAd.responses}
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Ad Content Text */}
+      {selectedAd.hasText && (
+        <Box style={{ marginTop: "8px" }}>
+          <Typography className={classes.adContentText}>
+            {selectedAd.content}
+          </Typography>
+        </Box>
+      )}
+
+      {/* Ad Image */}
+      <img
+        src={selectedAd.image}
+        alt="Advertisement"
+        className={classes.adImage}
+      />
+
+      {/* Like/Dislike for ads */}
+      <Box
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          marginTop: "8px",
+        }}
+      >
+        <Box
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginRight: "15px",
+          }}
+        >
+          <FiThumbsUp
+            size={16}
+            color="#56B954"
+            style={{ marginRight: "6px" }}
+          />
+          <Typography className={classes.adMetaText} style={{ color: "#56B954" }}>
+            {Math.floor(Math.random() * 50)}
+          </Typography>
+        </Box>
+        <Box
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <FiThumbsDown
+            size={16}
+            color="#FF3C3C"
+            style={{ marginRight: "6px" }}
+          />
+          <Typography className={classes.adMetaText} style={{ color: "#FF3C3C" }}>
+            {Math.floor(Math.random() * 5)}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
 
 const Questions = forwardRef(
   ({ referencedPosts, questions, setQuestions, pageNum, setPageNum }, ref) => {
@@ -116,25 +354,50 @@ const Questions = forwardRef(
     const classes = useStyles();
     const history = useHistory();
     const {
-      questions: qs,
-      searchTerm,
-      page,
-      isLoading,
-      total,
-    } = useSelector((state) => state.question);
+      questions: qs = [],
+      searchTerm = '',
+      page = 0,
+      isLoading = false,
+      total = 0,
+    } = useSelector((state) => state.question || {});
     const answers = useSelector((state) => state.answer.answers);
     const location = useLocation();
     const pathname = location.pathname;
     const { id: activeWikiId } = useSelector((state) => state.wiki.activeWiki);
 
     const { isAuthenticated, currentUser, isMd, isAdmin } = useAuth();
+
+    // State for rotating ads (from Home component)
+    const [currentAdIndex, setCurrentAdIndex] = useState(0);
+    const [isAdTransitioning, setIsAdTransitioning] = useState(false);
+
+    // Function for ad transitions (from Home component)
+    const handleAdTransition = () => {
+      setIsAdTransitioning(true);
+      
+      setTimeout(() => {
+        setCurrentAdIndex((prevIndex) => 
+          (prevIndex + 1) % 3
+        );
+        setIsAdTransitioning(false);
+      }, 500);
+    };
+
+    // Effect for ad rotation - every 12 seconds (from Home component)
+    useEffect(() => {
+      const adInterval = setInterval(() => {
+        handleAdTransition();
+      }, 12000);
+
+      return () => clearInterval(adInterval);
+    }, []);
+
     useEffect(() => {
       const fetchQuestions = async (searchQuery, qSetting) => {
         return dispatch(
           getSortedQuestions({
             q: searchQuery,
             qSetting: "exact",
-            // page: page === 0 ? page : pageNum,
             page: pageNum,
             activeWikiId:
               pathname.includes("/show") ||
@@ -162,9 +425,7 @@ const Questions = forwardRef(
       fetchQuestions(searchTerm);
     }, [dispatch, searchTerm, pageNum, activeWikiId, referencedPosts]);
 
-
     useEffect(() => {
-      // console.log(qs)
       if (qs.length === 0) {
         setQuestions([]);
       } else {
@@ -186,7 +447,7 @@ const Questions = forwardRef(
           setQuestions([...questions, ...qs, ...answers]);
         }
         else {
-          if(qs[1]?._id == questions[0]?._id) {
+          if(qs[1]?._id === questions[0]?._id) {
             setQuestions([...qs])
           }
           else {
@@ -209,6 +470,7 @@ const Questions = forwardRef(
 
     const onChangeTabHandler = useCallback(
       (tab) => {
+        if (!currentUser?.userID) return;
         switch (tab) {
           case "recents":
             setQuestions([]);
@@ -235,8 +497,6 @@ const Questions = forwardRef(
             break;
         }
       },
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [currentUser.userID, dispatch]
     );
 
@@ -273,13 +533,8 @@ const Questions = forwardRef(
         const newValue = `<span>&nbsp;<a href="/wiki/question/${item.title !== undefined ? item._id : item.questionID
           }/show" target="_self">[${item.user.username}]</a></span>`;
 
-        //|${item.title !== undefined ?'question':'answer'}
-
         editor.clipboard.dangerouslyPasteHTML(cursorPosition, newValue);
         lin();
-        // const newCursorPosition = cursorPosition + link.length;
-        // quillRef.current.getEditor().setSelection(newCursorPosition);
-        // ${activeWikiId == undefined ? item.user.username : `${item.user.username}|${item.questionId == undefined ? 'question' : 'answer'}|${item.questionId== undefined ? item._id:''}`}
       }
     };
     const POST_TYPES = useMemo(
@@ -302,25 +557,6 @@ const Questions = forwardRef(
     const [postType, setPostType] = useState(POST_TYPES[0].value);
     const [sortType, setSortType] = useState(QUESTION_TYPES[0].value);
 
-    // useEffect(() => {
-    //   console.log(`In Questions questions `, questions);
-    // }, [questions]);
-
-    // const filteredQuestions = useMemo(() => {
-    //   console.log(`In useMemo(filteredQuestions) questions `, questions);
-    //   switch (sortType) {
-    //     case "md-responded":
-    //       return questions.filter((item) => item.mdReviewed);
-    //     case "highest-rated":
-    //       return questions.map((item) => item).sort((p, n) => n.likes - p.likes);
-    //     case "newest":
-    //     default:
-    //       return questions
-    //         .map((item) => item)
-    //         .sort((p, n) => (p.date < n.date ? 1 : -1));
-    //   }
-    // }, [questions, sortType]);
-
     const calcQuestions = (questions, sortType) => {
       switch (sortType) {
         case "md-responded":
@@ -341,7 +577,6 @@ const Questions = forwardRef(
     const [filteredQuestions, setFilteredQuestions] = useState([]);
 
     useEffect(() => {
-      // console.log("filtered question : ", questions)
       const newFilteredQuestions = calcQuestions(
         JSON.parse(JSON.stringify(questions)),
         sortType
@@ -369,6 +604,43 @@ const Questions = forwardRef(
         filteredQuestions.filter((item) => item._id !== question._id)
       );
     };
+
+    // Function to render posts with ads every 5 posts (from Home component)
+    const renderPostsWithAds = () => {
+      const items = [];
+      
+      filteredQuestions.forEach((item, index) => {
+        // Add the post
+        items.push(
+          <TouchedWikiItem
+            ref={ref}
+            key={item._id}
+            item_question={item}
+            index={index}
+            onClick={handleItemClick}
+            onClickAlt={handleSetQuestionLink}
+            searchTerm={searchTerm}
+            referencedPosts={referencedPosts}
+            handleDeleteFilteredItem={handleDeleteFilteredItem}
+          />
+        );
+        
+        // Add ad after every 5 posts
+        if ((index + 1) % 5 === 0) {
+          items.push(
+            <Ads 
+              key={`ad-${index}`}
+              adIndex={(Math.floor(index / 5) + currentAdIndex) % 3} 
+              isTransitioning={isAdTransitioning}
+              classes={classes}
+            />
+          );
+        }
+      });
+      
+      return items;
+    };
+
     return (
       <Box height="100%">
         {isAuthenticated && (
@@ -419,19 +691,7 @@ const Questions = forwardRef(
           )}
           {filteredQuestions && filteredQuestions.length > 0 ? (
             <>
-              {filteredQuestions.map((item, index) => (
-                <TouchedWikiItem
-                  ref={ref}
-                  key={item._id}
-                  item_question={item}
-                  index={index}
-                  onClick={handleItemClick}
-                  onClickAlt={handleSetQuestionLink}
-                  searchTerm={searchTerm}
-                  referencedPosts={referencedPosts}
-                  handleDeleteFilteredItem={handleDeleteFilteredItem}
-                />
-              ))}
+              {renderPostsWithAds()}
             </>
           ) : (
             searchTerm && (

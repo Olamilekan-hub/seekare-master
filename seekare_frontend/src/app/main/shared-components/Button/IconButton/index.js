@@ -24,7 +24,7 @@ const styles = makeStyles((theme) => ({
   },
   text: {
     fontWeight: 500,
-    fontSize: "14px",
+    // fontSize: "14px",
     lineHeight: "20px",
     transition: "all 0.3s ease",
   },

@@ -199,6 +199,7 @@ const Questions = forwardRef(
 
     const onChangeTabHandler = useCallback(
       (tab) => {
+        if (!currentUser?.userID) return;
         switch (tab) {
           case "recents":
             setQuestions([]);

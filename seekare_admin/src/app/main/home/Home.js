@@ -35,6 +35,7 @@ const Home = () => {
 
   const onChangeTabHandler = useCallback(
     (tab) => {
+        if (!currentUser?.userID) return;
       setCurrentTab(tab);
       switch (tab) {
         case 'recents':

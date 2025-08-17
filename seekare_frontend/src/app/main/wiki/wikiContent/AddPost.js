@@ -12,8 +12,10 @@ import {
   Paper,
   TextField,
   Typography,
+  IconButton,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import { Close } from "@material-ui/icons";
 
 import CustomButton from "app/main/shared-components/Button";
 import * as API from "app/services/api";
@@ -46,33 +48,80 @@ const useStyles = makeStyles((theme) => ({
   header: {
     textAlign: "center",
   },
+  box: {
+    display: "flex",
+    width: "100%",
+    height: "100%",
+    background: "rgb(240, 251, 254)",
+    padding: "50px 20px",
+    [theme.breakpoints.down('md')]: {
+      padding: "30px 15px",
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: "20px 10px",
+    },
+  },
   title: {
     position: "relative",
+    marginBottom: "1.5rem",
   },
   sectionTitle: {
     fontWeight: 600,
-    fontSize: "18px",
+    fontSize: "32px",
     color: "#171725",
-    marginBottom: 20,
+    marginBottom: "1.5rem",
+    [theme.breakpoints.down('md')]: {
+      fontSize: "28px",
+      marginBottom: "1rem",
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "24px",
+      marginBottom: "0.8rem",
+    },
   },
   formSection: {
     height: "87vh",
     overflow: "hidden auto",
   },
   askForm: {
-    padding: "1rem",
+    padding: "20px 30px",
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "space-between",
-    height: "100%",
+    margin: "0 auto",
+    height: "auto",
+    minHeight: "85vh",
+    width: "100%",
+    // maxWidth: "800px",
     borderRadius: "1rem",
     background: "white",
     boxShadow: "0px 6px 58px rgba(196, 203, 214, 0.103611)",
     overflow: "hidden auto",
+    position: "relative",
+    [theme.breakpoints.down('md')]: {
+      width: "70%",
+      padding: "20px 25px",
+      minHeight: "80vh",
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: "95%",
+      padding: "15px 20px",
+      minHeight: "75vh",
+    },
     "& p.description": {
-      fontSize: 13,
+      fontSize: 15,
       color: "#6C6C6C",
       marginBottom: 8,
+    },
+  },
+  closeButton: {
+    position: "absolute",
+    top: "15px",
+    right: "15px",
+    color: "#6C6C6C",
+    padding: "4px",
+    "&:hover": {
+      backgroundColor: "#f0f0f0",
+      color: "#333",
     },
   },
 
@@ -80,9 +129,13 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     background: "#F5F7FF",
     border: `1px solid #9589F3`,
-    padding: "8px 14px",
-    borderRadius: 6,
-    fontSize: 15,
+    padding: "12px 14px",
+    borderRadius: 8,
+    fontSize: 17,
+    [theme.breakpoints.down('sm')]: {
+      padding: "10px 12px",
+      fontSize: 14,
+    },
 
     "&:hover, &:active, &:focus, &:focus-within": {
       border: `1px solid ${theme.palette.secondary.light}`,
@@ -90,13 +143,44 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  action: {
-    padding: "1rem 0",
+  contentSection: {
+    marginBottom: "2rem",
+    // flex: 1,
     display: "flex",
-    justifyContent: "flex-start",
-    "& button": {
-      marginRight: "1rem",
+    flexDirection: "column",
+  },
+
+  action: {
+    padding: "1.5rem 0 0.5rem 0",
+    width: "100%",
+    display: "flex",
+    margin: "0 auto",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "1rem",
+    marginTop: "auto",
+    [theme.breakpoints.down('sm')]: {
+      marginTop: "1rem",
+      justifyContent: "space-between",
     },
+    [theme.breakpoints.down('sm')]: {
+      marginTop: "1rem",
+      justifyContent: "space-between",
+      flexDirection: "column",
+      gap: "0.8rem",
+      "& button": {
+        width: "100%",
+      },
+    },
+  },
+
+  CustomButton: {
+    borderRadius: 6,
+    padding: "16px 20px",
+    fontSize: 20,
+    fontWeight: 600,
+    // color: "#fff",
+    border: "#633DF8",
   },
   tipsSection: {},
   pin: {
@@ -157,6 +241,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.default,
     fontSize: "0.9rem",
     fontWeight: 600,
+    marginBottom: "1rem",
   },
   dot: {
     width: 4,
@@ -167,23 +252,35 @@ const useStyles = makeStyles((theme) => ({
   fieldTitle: {
     color: theme.palette.secondary.main,
     fontWeight: 500,
-    fontSize: 17,
-    marginBottom: 5,
-    marginTop: "11px",
+    fontSize: 24,
+    marginBottom: 8,
+    marginTop: "0.5rem",
     marginRight: "8px",
+    [theme.breakpoints.down('md')]: {
+      fontSize: 20,
+      marginTop: "0.8rem",
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 16,
+      marginTop: "0.8rem",
+    },
   },
   tags: {
-    marginTop: "10px",
+    marginBottom: "1.5rem",
   },
   discardButton: {
     background: "#633DF8",
     borderRadius: 6,
     padding: "12px 20px",
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: 600,
     color: "#fff",
     border: "#633DF8",
     textTransform: "capitalize",
+    [theme.breakpoints.down('sm')]: {
+      padding: "10px 16px",
+      fontSize: 14,
+    },
 
     "&:hover": {
       border: "#6c5da7",
@@ -192,10 +289,11 @@ const useStyles = makeStyles((theme) => ({
   },
   uploadWrapper: {
     position: "relative",
+    marginBottom: "1rem",
   },
   uploadInput: {
-    height: " 4.5rem",
-    width: " 2.5rem",
+    height: "4.5rem",
+    width: "2.5rem",
     cursor: "pointer",
     opacity: "0",
     padding: "4px",
@@ -203,30 +301,64 @@ const useStyles = makeStyles((theme) => ({
     top: "50%",
     left: "2px",
     transform: "translateY(-50%)",
-    // cursor: "pointer",
   },
   uploadIcon: {
     height: "50px",
     width: "50px",
     paddingLeft: "1.5rem",
     marginLeft: "-24px",
-    // cursor: "pointer",
+    color: "#633DF8",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
   },
   imageATitle: {
     fontSize: "14px",
     fontWeight: "900",
+    marginBottom: "0.5rem",
   },
   quillEditor: {
     width: "100%",
     color: "#6C6C6C",
-    minHeight: "10rem",
-    maxHeight: "10rem",
+    minHeight: "12rem",
+    maxHeight: "15rem",
     overflow: "hidden auto",
     borderRadius: "6px",
     background: theme.palette.secondary.lightest,
     border: "none",
-    padding:'10px'
-
+    padding: "12px",
+    resize: "vertical",
+    fontFamily: theme.typography.fontFamily,
+    fontSize: "16px",
+    lineHeight: "1.5",
+    [theme.breakpoints.down('md')]: {
+      minHeight: "10rem",
+      maxHeight: "12rem",
+    },
+    [theme.breakpoints.down('sm')]: {
+      minHeight: "8rem",
+      maxHeight: "10rem",
+      padding: "10px",
+    },
+  },
+  imageUploadSection: {
+    marginBottom: "1rem",
+  },
+  recaptchaSection: {
+    // margin: "0 30px",
+    paddingTop: "0px",
+    // height: "500px",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    [theme.breakpoints.down('sm')]: {
+      "& > div": {
+        transform: "scale(0.9)",
+        transformOrigin: "0 0",
+      },
+    },
   },
 }));
 
@@ -245,15 +377,21 @@ const AddPost = () => {
   const similarQuestionsRef = useRef(null);
 
   const [imageUrl, setImageUrl] = useState("");
-
   const [imageFile, setImageFile] = useState(null);
 
   const responsive =
     useSelector((state) => state.ui.responsive.responsiveType) || "addPost";
+
+  // Function to go back to home page
+  const goBackToHome = () => {
+    history.push("/");
+  };
+  
   const handleImageChange = (event) => {
     setImageFile(event.target.files[0]);
     handleImageUpload(event.target.files[0]);
   };
+  
   const handleImageUpload = (imageFile) => {
     if (!imageFile) {
       console.error("No image file selected");
@@ -350,8 +488,8 @@ const AddPost = () => {
   }, [content]);
 
   const validateEmail = (email) => {
-    const trimmedEmail = email.trim(); // Remove extra spaces
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
+    const trimmedEmail = email.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(trimmedEmail);
   }
 
@@ -386,6 +524,7 @@ const AddPost = () => {
       }
     }
   };
+  
   const [tags, setTags] = useState([]);
   const tags_from_db = useSelector((state) => state.tag.tags);
 
@@ -467,7 +606,7 @@ const AddPost = () => {
             pushSnackbar("Your questions is posted successfully", "success")
           );
           console.log(res,'res')
-          history.push("/wiki");
+          history.push("/wiki/answer");
         }
         dispatch(changeResponsive(""));
       } catch (error) {
@@ -479,6 +618,7 @@ const AddPost = () => {
       setRecaptcha(false);
     }
   };
+  
   const [disabledPost, setDisabledPost] = useState(false);
 
   useEffect(() => {
@@ -488,7 +628,6 @@ const AddPost = () => {
     } else {
       setDisabledPost(true);
       console.log(disabledPost)
-
     }
   }, [title, content]);
 
@@ -498,113 +637,216 @@ const AddPost = () => {
     setContent("");
     setTags([]);
   };
+  
   console.log(responsive);
+  
   return (
-    <Paper
-      className={classes.askForm}
-      component="form"
-      onSubmit={handleSubmit}
-      style={{
-        display: responsive === "addPost" ? "block" : "none",
-      }}
-    >
-      <Box className={classes.title} ref={similarQuestionsRef} mb={2}>
-        <Typography
-          variant="h5"
-          component="h3"
-          className={classes.sectionTitle}
+    <div className={classes.box}>
+      <Paper
+        className={classes.askForm}
+        component="form"
+        onSubmit={handleSubmit}
+        style={{
+          display: responsive === "addPost" ? "flex" : "none",
+        }}
+      >
+        {/* X Button to go back to home */}
+        <IconButton
+          className={classes.closeButton}
+          onClick={goBackToHome}
+          aria-label="close"
         >
-          Add Your Post
-        </Typography>
-        <Typography variant="h6" component="h6" className={classes.fieldTitle}>
-          Title
-        </Typography>
-        {/* <Typography component="p" variant="body1" className="description">
-          Be specific and imagine you’re asking a question to another person
-        </Typography> */}
-        <InputBase
-          variant="outlined"
-          size="small"
-          name="title"
-          type="text"
-          onChange={onChangeTitle}
-          value={title}
-          placeholder="e.g. Why is Covid is so dangerous?"
-          className={classes.inputTitle}
-          autoComplete="off"
-        />
-        {errors && touched && errors.title && errors.title.message !== "" && (
-          <Box color="red">{errors.title.message}</Box>
-        )}
-      </Box>
+          <Close />
+        </IconButton>
 
-      <Box className={classes.content} mb={2}>
-        <Typography variant="h6" component="h2" className={classes.fieldTitle}>
-          Text
-        </Typography>
-        {/* <Typography component="p" variant="body1" className="description">
-          Include any details that might help us answer your question
-        </Typography> */}
-        <textarea
-          className={classes.quillEditor}
-          rows="10"
-          content={content}
-          onlyText={!isMd || isAdmin}
-          onChange={onChangeContent}
-          ref={ref}
-        />
-        {errors &&
-          touched &&
-          errors.content &&
-          errors.content.message !== "" && (
-            <Box color="red">{errors.content.message}</Box>
-          )}
-      </Box>
-      <Box style={{ marginBottom: "10px" }}>
-        <Box style={{ display: "flex", marginBottom: "10px" }}>
+        <Box className={classes.title} ref={similarQuestionsRef}>
           <Typography
-            variant="h6"
-            component="h2"
-            className={classes.fieldTitle}
+            variant="h5"
+            component="h3"
+            className={classes.sectionTitle}
           >
-            Upload Image
+            Add Your Post
           </Typography>
-          <div className={classes.uploadWrapper}>
-            <FiUpload className={classes.uploadIcon}></FiUpload>
-            <input
-              className="input"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className={classes.uploadInput}
-            />
+          <Typography variant="h6" component="h6" className={classes.fieldTitle}>
+            Title
+          </Typography>
+          <InputBase
+            variant="outlined"
+            size="small"
+            name="title"
+            type="text"
+            onChange={onChangeTitle}
+            value={title}
+            placeholder="e.g. Why is Covid is so dangerous?"
+            className={classes.inputTitle}
+            autoComplete="off"
+          />
+          {errors && touched && errors.title && errors.title.message !== "" && (
+            <Box color="red" mt={1}>{errors.title.message}</Box>
+          )}
+        </Box>
+
+        <Box className={classes.contentSection}>
+          <Typography variant="h6" component="h2" className={classes.fieldTitle}>
+            Text
+          </Typography>
+          <textarea
+            className={classes.quillEditor}
+            rows="10"
+            value={content}
+            onChange={onChangeContent}
+            ref={ref}
+            placeholder="Include any details that might help us answer your question"
+          />
+          {errors &&
+            touched &&
+            errors.content &&
+            errors.content.message !== "" && (
+              <Box color="red" mt={1}>{errors.content.message}</Box>
+            )}
+        </Box>
+
+        <Box className={classes.imageUploadSection}>
+          <Box style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
+            <Typography
+              variant="h6"
+              component="h2"
+              className={classes.fieldTitle}
+              style={{ marginTop: 0, marginBottom: 0 }}
+            >
+              Upload Image
+            </Typography>
+            <div className={classes.uploadWrapper} style={{ marginLeft: "10px", marginBottom: 0 }}>
+              <FiUpload className={classes.uploadIcon}></FiUpload>
+              <input
+                className="input"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className={classes.uploadInput}
+              />
+            </div>
+          </Box>
+          {imageFile && (
+            <Typography
+              variant="body2"
+              style={{
+                fontSize: "13px",
+                color: "#6C6C6C",
+                marginBottom: "10px",
+              }}
+            >
+              Selected: {imageFile?.name}
+            </Typography>
+          )}
+          <Typography className="description">
+            Include images related to this question
+          </Typography>
+        </Box>
+
+        {imageFile && (
+          <Box mb={2}>
             <Typography
               variant="h6"
               component="h6"
-              style={{
-                fontSize: "13px",
-                marginTop: "-15px",
-              }}
+              className={classes.imageATitle}
             >
-              {imageFile?.name}
+              {imageUploadAgreementsTitle}
             </Typography>
-          </div>
-        </Box>
-        <Typography className="description">
-          Include images related to this question
-        </Typography>
-      </Box>
-      {imageFile && (
-        <>
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.imageATitle}
-          >
-            {imageUploadAgreementsTitle}
+            <Box component="ul" py={1} px={3} className={classes.agreements}>
+              {imageUploadAgreements.map((item) => (
+                <Box
+                  key={item}
+                  component="li"
+                  mt={1}
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Box display="flex" ml={1}>
+                    {item}
+                  </Box>
+                </Box>
+              ))}
+
+              {imageUploadAgreementsSub.map((item) => (
+                <Box
+                  key={item}
+                  component="li"
+                  mt={1}
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Box display="flex" ml={1}>
+                    &nbsp;{item}
+                  </Box>
+                </Box>
+              ))}
+
+              {imageUploadAgreementsFin.map((item) => (
+                <Box
+                  key={item}
+                  component="li"
+                  mt={1}
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Box display="flex" ml={1}>
+                    {item}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+            <Typography
+              variant="h6"
+              component="h6"
+              className={classes.imageATitle}
+            >
+              {imageUploadAgreementsRes}
+            </Typography>
+          </Box>
+        )}
+
+        <Box className={classes.tags}>
+          <Typography variant="h6" component="h2" className={classes.fieldTitle}>
+            Tags
           </Typography>
+          <Typography className="description" style={{ marginBottom: "10px" }}>
+            Add up to 5 tags to describe what your question is about
+          </Typography>
+          <Autocomplete
+            multiple
+            filterSelectedOptions
+            size="small"
+            id="tags-outlined"
+            value={tags}
+            options={tags_from_db}
+            freeSolo
+            getOptionSelected={(option, value) => option.title === value.title}
+            getOptionLabel={(option) => option.title}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label=""
+                variant="outlined"
+                placeholder="Tags"
+                helperText={
+                  tags.length > 4
+                    ? "Reached limit of tags, to add new one , please remove another"
+                    : ""
+                }
+                style={{
+                  borderRadius: 12,
+                  background: "#F5F7FF",
+                }}
+              />
+            )}
+            onChange={(e, value) => handleChangeTags(value)}
+          />
+        </Box>
+
+        {!disabledPost && (
           <Box component="ul" py={1} px={3} className={classes.agreements}>
-            {imageUploadAgreements.map((item) => (
+            {agreements.map((item) => (
               <Box
                 key={item}
                 component="li"
@@ -612,144 +854,59 @@ const AddPost = () => {
                 display="flex"
                 alignItems="center"
               >
-                <Box display="flex" ml={1}>
-                  {item}
-                </Box>
-              </Box>
-            ))}
-
-            {imageUploadAgreementsSub.map((item) => (
-              <Box
-                key={item}
-                component="li"
-                mt={1}
-                display="flex"
-                alignItems="center"
-              >
-                <Box display="flex" ml={1}>
-                  &nbsp;{item}
-                </Box>
-              </Box>
-            ))}
-
-            {imageUploadAgreementsFin.map((item) => (
-              <Box
-                key={item}
-                component="li"
-                mt={1}
-                display="flex"
-                alignItems="center"
-              >
+                <Box className={classes.dot}></Box>
                 <Box display="flex" ml={1}>
                   {item}
                 </Box>
               </Box>
             ))}
           </Box>
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.imageATitle}
-          >
-            {imageUploadAgreementsRes}
-          </Typography>
-        </>
-      )}
-      <Box className={classes.tags}>
-        <Typography variant="h6" component="h2" className={classes.fieldTitle}>
-          Tags
-        </Typography>
-        <Typography className="description">
-          Add up to 5 tags to describe what your question is about
-        </Typography>
-        <Autocomplete
-          multiple
-          filterSelectedOptions
-          size="small"
-          id="tags-outlined"
-          value={tags}
-          options={tags_from_db}
-          freeSolo
-          getOptionSelected={(option, value) => option.title === value.title}
-          getOptionLabel={(option) => option.title}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label=""
-              variant="outlined"
-              placeholder="Tags"
-              helperText={
-                tags.length > 4
-                  ? "Reached limit of tags, to add new one , please remove another"
-                  : ""
-              }
-              style={{
-                borderRadius: 12,
-                background: "#F5F7FF",
-              }}
-            />
-          )}
-          onChange={(e, value) => handleChangeTags(value)}
-        />
-      </Box>
-      {!disabledPost && (
-        <Box component="ul" py={1} px={3} className={classes.agreements}>
-          {agreements.map((item) => (
-            <Box
-              key={item}
-              component="li"
-              mt={1}
-              display="flex"
-              alignItems="center"
-            >
-              <Box className={classes.dot}></Box>
-              <Box display="flex" ml={1}>
-                {item}
-              </Box>
-            </Box>
-          ))}
-        </Box>
-      )}
+        )}
 
-      <ReCAPTCHA
-        sitekey="6LfuOQEoAAAAAP3H672RFR1z5foC9lyDKKtygZaJ"
-        id="recaptcha"
-        ref={captchRef}
-        style={{ padding: "10px" }}
-      />
-      {!recaptcha && (
-        <p
-          error={true}
-          style={{ padding: "3px 7px", color: "red", margin: "0" }}
-        >
-          Verify you are a person
-        </p>
-      )}
-      <Box className={classes.action}>
-        <CustomButton
-          type="submit"
-          size="md"
-          variant="contained"
-          color="secondary"
-          disabled={disabledPost || !recaptcha}
-          style={{
-            background:disabledPost ? '#E6E6E6':'',
-            cursor:disabledPost ? 'now-allowed' : 'pointer'
-          }}
-        >
-          Agree and Post
-        </CustomButton>
-        <Button
-          type="reset"
-          variant="outlined"
-          color="primary"
-          onClick={discardForm}
-          className={classes.discardButton}
-        >
-          Discard Your Post
-        </Button>
-      </Box>
-    </Paper>
+        <Box className={classes.recaptchaSection}>
+          <ReCAPTCHA
+            sitekey="6LfuOQEoAAAAAP3H672RFR1z5foC9lyDKKtygZaJ"
+            id="recaptcha"
+            ref={captchRef}
+          />
+          {!recaptcha && (
+            <p
+              error={true}
+              style={{ padding: "3px 7px", color: "red", margin: "5px 0 0 0" }}
+            >
+              Verify you are a person
+            </p>
+          )}
+        </Box>
+
+        <Box className={classes.action}>
+          <CustomButton
+            className={classes.CustomButton}
+            type="submit"
+            size="md"
+            variant="contained"
+            color="secondary"
+            disabled={disabledPost || !recaptcha}
+            style={{
+              background: disabledPost ? '#E6E6E6' : '',
+              cursor: disabledPost ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Agree and Post
+          </CustomButton>
+          <Button
+            type="reset"
+            variant="outlined"
+            color="primary"
+            onClick={discardForm}
+            className={classes.discardButton}
+          >
+            Discard Your Post
+          </Button>
+        </Box>
+      </Paper>
+    </div>
   );
 };
+
 export default AddPost;

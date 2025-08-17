@@ -20,7 +20,7 @@ async function actionPerform() {
   } else return;
 }
 
-const openAIKey =process.env.openAIKey;
+const openAIKey = process.env.OPENAI_API_KEY;
 
 async function getEmbedding(query) {
   const url = 'https://api.openai.com/v1/embeddings';
